@@ -1,0 +1,5 @@
+{"vacio" : 0,
+ "max" : {"id" : 1, "pintura" : 3},
+ "min" : {"id" : 2, "pintura": 4},
+ "bonificacion" : 5
+}
