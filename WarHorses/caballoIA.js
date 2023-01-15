@@ -1,12 +1,91 @@
 import { Caballo } from "./caballo.js";
+import Nodo from "./nodo.js";
+import { Casilla, leerTablero, max, min } from "./tablero.js";
+import valores from "./valoresTablero.json" assert {type: "json"};
 
-class CaballoIA extends Caballo{
-    constructor(fila, columna, max) {
-        super (fila, columna, max);
+class CaballoIA extends Caballo {
+    constructor(fila = 0, columna = 0, max = true, dificultad = 1) {
+        super(fila, columna, max);
+        this.dificultad = dificultad;
     }
-    decidirMovimiento () {
+    decidirMovimiento() {
+        this.ciclosEvitados = 0;
+        this.arbolMinimax = [];
         const movimientosPosibles = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
-        let index = 0
+        this.arbolMinimax.push(new Nodo(0, null, [], [], 0, this.max ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY, this.max));
+        const nodosPendientes = [0];
+        let index = 0;
+        while (nodosPendientes.length > 0) {
+            expandir(this.arbolMinimax, this.arbolMinimax[nodosPendientes[0]], this.arbolMinimax[nodosPendientes[0]].profundidad < this.dificultad * 2 - 1 ? false : true);
+            nodosPendientes.shift();
+        }
+        if (this.arbolMinimax.length < 2) {
+            this.bloqueado = true;
+        }
+        else {
+            while (this.arbolMinimax[this.arbolMinimax.length - 1].profundidad != 1) {
+                analizar(this.arbolMinimax[this.arbolMinimax.length - 1], this.dificultad);
+                this.arbolMinimax.pop();
+            }
+            for (let i = this.arbolMinimax.length - 1; i > 0; i--) {
+                analizar(this.arbolMinimax[i], this.dificultad);
+            }
+            const utilidadFinal = this.arbolMinimax[0].utilidad;
+            console.log("Mi utilidad es de " + utilidadFinal);
+            this.arbolMinimax.shift();
+
+            index = 0;
+            while (index < this.arbolMinimax.length) {
+                if (this.arbolMinimax[index].utilidad != utilidadFinal) {
+                    this.arbolMinimax.splice(index, 1);
+                } else {
+                    index++;
+                }
+            }
+            const nodoFinal = this.arbolMinimax[Math.floor(Math.random() * this.arbolMinimax.length)];
+            this.mover(nodoFinal.movimiento[0], nodoFinal.movimiento[1]);
+        }
+        function expandir(arbolMinimax = [], nodo = new Nodo(), terminales = true) {
+            const caballo = nodo.max ? max : min;
+            for (let i = 0; i < movimientosPosibles.length; i++) {
+                let nuevaFila = caballo.fila + movimientosPosibles[i][0];
+                let nuevaColumna = caballo.columna + movimientosPosibles[i][1];
+                if (nodo.profundidad > 2) {
+                    nuevaFila = nodo.padre.padre.casillasAfectadas[0].fila + movimientosPosibles[i][0];
+                    nuevaColumna = nodo.padre.padre.casillasAfectadas[0].columna + movimientosPosibles[i][1];
+                }
+                if (caballo.casillaDisponible(nuevaFila, nuevaColumna, nodo)) {
+                    let casillas = [new Casilla(nuevaFila, nuevaColumna, caballo.valores.id)];
+                    if (leerTablero(nuevaFila, nuevaColumna) == valores.bonificacion) {
+                        casillas = casillas.concat(caballo.efectoBonificacion(nuevaFila, nuevaColumna, nodo));
+                    }
+                    arbolMinimax.push(new Nodo(index, nodo, movimientosPosibles[i], casillas, nodo.profundidad + 1, -nodo.utilidad, !nodo.max));
+                    if (!terminales) {
+                        index++;
+                        nodosPendientes.push(index);
+                    }
+                }
+            }
+        }
+        function analizar(nodo = new Nodo(), dificultad) {
+            if (nodo.profundidad == dificultad * 2) {
+                let pintadasMax = 0;
+                let pintadasMin = 0
+                let nodoActual = nodo;
+                while (nodoActual.padre != null) {
+                    if (nodoActual.max) {
+                        pintadasMin += (nodoActual.casillasAfectadas.length / nodoActual.profundidad);
+                    } else {
+                        pintadasMax += (nodoActual.casillasAfectadas.length / nodoActual.profundidad);
+                    }
+                    nodoActual = nodoActual.padre;
+                }
+                nodo.utilidad = pintadasMax - pintadasMin;
+
+            }
+            nodo.actualizarPadre();
+        }
+        /* let index = 0
         while (index < movimientosPosibles.length) {
             if (this.casillaDisponible(this.fila + movimientosPosibles[index][0], this.columna + movimientosPosibles[index][1])){
                 index++;
@@ -19,7 +98,26 @@ class CaballoIA extends Caballo{
             this.mover(movimientoElegido[0], movimientoElegido[1]);
         } else {
             this.bloqueado = true;
+        } */
+
+    }
+    casillaDisponible(fila, columna, nodo = new Nodo()) {
+        if (super.casillaDisponible(fila, columna)) {
+            let nodoActual = nodo.copiar();
+            while (nodoActual.padre != null) {
+                for (let i = 0; i < nodoActual.casillasAfectadas.length; i++) {
+                    if (nodoActual.casillasAfectadas[i].fila == fila &&
+                        nodoActual.casillasAfectadas[i].columna == columna) {
+                        this.ciclosEvitados++;
+                        return false;
+                    }
+                }
+                nodoActual = nodoActual.padre.copiar();
+            }
+            return true;
         }
+        this.ciclosEvitados++;
+        return false;
     }
 }
 

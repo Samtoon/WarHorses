@@ -1,8 +1,9 @@
+import Nodo from "./nodo.js";
 import { crearTablero,pintarTablero, leerTablero, display, Casilla, nFilas, nColumnas} from "./tablero.js";
 import valores from "./valoresTablero.json" assert {type: "json"};
 
 class Caballo {
-    constructor(fila, columna, max) {
+    constructor(fila = 0, columna = 0, max = true) {
         this.fila = fila;
         this.columna = columna;
         this.max = max;
@@ -23,7 +24,12 @@ class Caballo {
         this.fila = nuevaFila;
         this.columna = nuevaColumna;
     }
-    casillaDisponible(fila, columna) {
+    decidirMovimiento() {
+        const filas = Number(prompt("Cuántas filasasasffsf desea moverse?"));
+        const columnas = Number(prompt("Cuántas columnas desea moverse?"));
+        this.mover(filas,columnas);
+    }
+    casillaDisponible(fila, columna, nodo = new Nodo()) {
         if (fila >= 0
             && fila < nFilas
             && columna >= 0
@@ -33,13 +39,13 @@ class Caballo {
         }
         return false;
     }
-    efectoBonificacion(fila, columna) {
+    efectoBonificacion(fila, columna, nodo = new Nodo()) {
         const casillas = [];
         const pintadasPosibles = [[-1, 0], [1, 0], [0, -1], [0, 1]];
         for (let i = 0; i < pintadasPosibles.length; i++) {
             const filaPintada = fila + pintadasPosibles[i][0];
             const columnaPintada = columna + pintadasPosibles[i][1];
-            if (this.casillaDisponible(filaPintada, columnaPintada)) {
+            if (this.casillaDisponible(filaPintada, columnaPintada, nodo)) {
                 casillas.push(new Casilla(filaPintada, columnaPintada, this.valores.pintura));
             }
         }

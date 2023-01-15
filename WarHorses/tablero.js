@@ -3,8 +3,12 @@ import { CaballoIA } from "./caballoIA.js";
 import valores from "./valoresTablero.json" assert {type: "json"};
 
 const tablero = [];
-const nFilas = 10;
-const nColumnas = 10;
+const filaMax = 2;
+const columnaMax = 2;
+const filaBono = 3;
+const columnaBono = 0;
+const nFilas = 5;
+const nColumnas = 5;
 let max;
 let min;
 class Casilla {
@@ -33,15 +37,17 @@ function crearTablero () {
         }
         switch(i) {
             case 0:
-                max = new CaballoIA(fila, columna, true);
+                max = new CaballoIA(filaMax, columnaMax, true, 2);
                 break;
             case 1:
-                min = new CaballoIA(fila, columna, false);
+                min = new Caballo(fila, columna, false);
                 break;
             default:
                 tablero[fila][columna] = valores.bonificacion;
+                console.log("Bonificación en ["+columna+","+fila+"]");
         }
     }
+    tablero[filaBono][columnaBono] = valores.bonificacion;
 }
 
 function pintarTablero (casillas) {
@@ -65,19 +71,30 @@ function tableroLleno() {
 const leerTablero = (fila, columna) => tablero[fila][columna];
 
 function display () {
+    let puntajeMin = 0;
+    let puntajeMax = 0;
     console.log("\n");
     for (let j = 0; j < tablero.length; j++) {
         let fila = "";
         for (let i = 0; i < tablero[0].length; i++) {
             fila += tablero[j][i] + "   ";
+            if (tablero[j][i] == max.valores.pintura) {
+                puntajeMax += 1;
+            } else if (tablero[j][i] == min.valores.pintura) {
+                puntajeMin += 1;
+            }
         }
         console.log(fila);
     }
+    console.log("Puntaje Min: " + puntajeMin);
+    console.log("Puntaje Max:" + puntajeMax);
 }
 crearTablero();
-while (!max.bloqueado || !min.bloqueado) {
+display();
+while(!max.bloqueado || !min.bloqueado) {
     max.decidirMovimiento();
     min.decidirMovimiento();
+    display();
 }
 display();
 
