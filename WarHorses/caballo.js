@@ -25,9 +25,24 @@ class Caballo {
         this.columna = nuevaColumna;
     }
     decidirMovimiento() {
-        const filas = Number(prompt("Cuántas filasasasffsf desea moverse?"));
+        function contieneMovimiento(filas, columnas) {
+            for(let i = 0; i < valores.movimientosPosibles.length; i++) {
+                const movimientoEvaluado = valores.movimientosPosibles[i];
+                if (filas == movimientoEvaluado[0] && columnas == movimientoEvaluado[1]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        const filas = Number(prompt("Cuántas filas desea moverse?"));
         const columnas = Number(prompt("Cuántas columnas desea moverse?"));
-        this.mover(filas,columnas);
+        console.log(`El includes es: ${typeof [filas, columnas]} y movimientosPosibles: ${valores.movimientosPosibles[0]}, la comparación es ${[-2, -1] === valores.movimientosPosibles[0]}`);
+        if (this.casillaDisponible(this.fila + filas, this.columna + columnas) && contieneMovimiento(filas, columnas)) {
+            this.mover(filas,columnas);
+        } else {
+            alert("Movimiento inválido");
+            this.decidirMovimiento();
+        }
     }
     casillaDisponible(fila, columna, nodo = new Nodo()) {
         if (fila >= 0

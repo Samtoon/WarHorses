@@ -11,72 +11,114 @@ class CaballoIA extends Caballo {
     decidirMovimiento() {
         this.ciclosEvitados = 0;
         this.arbolMinimax = [];
-        const movimientosPosibles = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
-        this.arbolMinimax.push(new Nodo(0, null, [], [], 0, this.max ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY, this.max));
+        const movimientosPosibles = valores.movimientosPosibles;
+        this.arbolMinimax.push(new Nodo(0, 0, null, [], [], 0, this.max ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY, this.max));
         const nodosPendientes = [0];
-        let index = 0;
-        while (nodosPendientes.length > 0) {
-            expandir(this.arbolMinimax, this.arbolMinimax[nodosPendientes[0]], this.arbolMinimax[nodosPendientes[0]].profundidad < this.dificultad * 2 - 1 ? false : true);
-            nodosPendientes.shift();
-        }
-        if (this.arbolMinimax.length < 2) {
-            this.bloqueado = true;
-        }
-        else {
-            while (this.arbolMinimax[this.arbolMinimax.length - 1].profundidad != 1) {
+        let index = 1;
+        // while (nodosPendientes.length > 0) {
+        //     expandir(this.arbolMinimax, this.arbolMinimax[nodosPendientes[0]].profundidad < this.dificultad * 2 - 1 ? false : true);
+        //     nodosPendientes.shift();
+        // }
+        //let nodoFinal = null;
+        while (this.arbolMinimax.length > 1 || !this.arbolMinimax[0].terminal) {
+            while (!this.arbolMinimax[this.arbolMinimax.length - 1].terminal) {
+                expandir(this.arbolMinimax, this.arbolMinimax[this.arbolMinimax.length - 1].profundidad == this.dificultad * 2 - 1);
+            }
+            while (this.arbolMinimax[this.arbolMinimax.length - 1].terminal && this.arbolMinimax.length > 1) {
                 analizar(this.arbolMinimax[this.arbolMinimax.length - 1], this.dificultad);
                 this.arbolMinimax.pop();
             }
-            for (let i = this.arbolMinimax.length - 1; i > 0; i--) {
-                analizar(this.arbolMinimax[i], this.dificultad);
-            }
-            const utilidadFinal = this.arbolMinimax[0].utilidad;
-            console.log("Mi utilidad es de " + utilidadFinal);
-            this.arbolMinimax.shift();
-
-            index = 0;
-            while (index < this.arbolMinimax.length) {
-                if (this.arbolMinimax[index].utilidad != utilidadFinal) {
-                    this.arbolMinimax.splice(index, 1);
-                } else {
-                    index++;
-                }
-            }
-            const nodoFinal = this.arbolMinimax[Math.floor(Math.random() * this.arbolMinimax.length)];
-            this.mover(nodoFinal.movimiento[0], nodoFinal.movimiento[1]);
         }
-        function expandir(arbolMinimax = [], nodo = new Nodo(), terminales = true) {
+        if (this.arbolMinimax[0].movimiento.length > 0) {
+            this.mover(this.arbolMinimax[0].movimiento[0], this.arbolMinimax[0].movimiento[1]);
+        } else {
+            this.bloqueado = true;
+        }
+        // if (this.arbolMinimax.length < 2) {
+        //     this.bloqueado = true;
+        // }
+        // else {
+        //     while (this.arbolMinimax[this.arbolMinimax.length - 1].profundidad != 1) {
+        //         analizar(this.arbolMinimax[this.arbolMinimax.length - 1], this.dificultad);
+        //         this.arbolMinimax.pop();
+        //     }
+        //     for (let i = this.arbolMinimax.length - 1; i > 0; i--) {
+        //         analizar(this.arbolMinimax[i]);
+        //     }
+        //     const utilidadFinal = this.arbolMinimax[0].utilidad;
+        //     //console.log("Mi utilidad es de " + utilidadFinal);
+        //     this.arbolMinimax.shift();
+
+        //     index = 0;
+        //     while (index < this.arbolMinimax.length) {
+        //         if (this.arbolMinimax[index].utilidad != utilidadFinal) {
+        //             this.arbolMinimax.splice(index, 1);
+        //         } else {
+        //             index++;
+        //         }
+        //     }
+        //     const nodoFinal = this.arbolMinimax[Math.floor(Math.random() * this.arbolMinimax.length)];
+        //     if (nodoFinal.movimiento.length > 0) {
+        //         this.mover(nodoFinal.movimiento[0], nodoFinal.movimiento[1]);
+        //     } else {
+        //         this.bloqueado = true;
+        //     }
+
+        //}
+        function expandir(arbolMinimax = [], terminales = true) {
+            const nodo = arbolMinimax[arbolMinimax.length - 1];
+            let esteril = true;
+            let terminal = terminales;
             const caballo = nodo.max ? max : min;
+
             for (let i = 0; i < movimientosPosibles.length; i++) {
                 let nuevaFila = caballo.fila + movimientosPosibles[i][0];
                 let nuevaColumna = caballo.columna + movimientosPosibles[i][1];
-                if (nodo.profundidad > 2) {
-                    nuevaFila = nodo.padre.padre.casillasAfectadas[0].fila + movimientosPosibles[i][0];
-                    nuevaColumna = nodo.padre.padre.casillasAfectadas[0].columna + movimientosPosibles[i][1];
+                if (nodo.profundidad > 1) {
+                    const abuelo = nodo.padre.casillasAfectadas[0];
+                    nuevaFila = abuelo.fila + movimientosPosibles[i][0];
+                    nuevaColumna = abuelo.columna + movimientosPosibles[i][1];
                 }
                 if (caballo.casillaDisponible(nuevaFila, nuevaColumna, nodo)) {
                     let casillas = [new Casilla(nuevaFila, nuevaColumna, caballo.valores.id)];
                     if (leerTablero(nuevaFila, nuevaColumna) == valores.bonificacion) {
                         casillas = casillas.concat(caballo.efectoBonificacion(nuevaFila, nuevaColumna, nodo));
                     }
-                    arbolMinimax.push(new Nodo(index, nodo, movimientosPosibles[i], casillas, nodo.profundidad + 1, -nodo.utilidad, !nodo.max));
-                    if (!terminales) {
-                        index++;
+                    esteril = false;
+                    arbolMinimax.push(new Nodo(index, nodo.id, nodo, movimientosPosibles[i], casillas, nodo.profundidad + 1, -nodo.utilidad, !nodo.max, terminal));
+                    if (!terminal) {
                         nodosPendientes.push(index);
                     }
+                    index++;
                 }
             }
+            if (esteril) {
+                //console.log(`El nodo ${nodo.id} es estéril`);
+                const fila = nodo.profundidad > 1 ? nodo.padre.casillasAfectadas[0].fila : caballo.fila;
+                const columna = nodo.profundidad > 1 ? nodo.padre.casillasAfectadas[0].columna : caballo.columna;
+                terminal = nodo.esteril ? true : terminal;
+                arbolMinimax.push(new Nodo(index, nodo.id, nodo, [], [new Casilla(fila, columna, caballo.valores.id)], nodo.profundidad + 1, -nodo.utilidad, !nodo.max, terminal));
+                if (!terminal) {
+                    nodosPendientes.push(index);
+                }
+                index++;
+            }
+            nodo.esteril = esteril;
         }
         function analizar(nodo = new Nodo(), dificultad) {
-            if (nodo.profundidad == dificultad * 2) {
+            if (!Number.isFinite(nodo.utilidad)) {
                 let pintadasMax = 0;
                 let pintadasMin = 0
                 let nodoActual = nodo;
                 while (nodoActual.padre != null) {
-                    if (nodoActual.max) {
-                        pintadasMin += (nodoActual.casillasAfectadas.length / nodoActual.profundidad);
+                    if (nodoActual.padre.esteril) {
+                        nodoActual = nodoActual.padre;
+                        continue;
+                    }
+                    else if (nodoActual.max) {
+                        pintadasMin += (nodoActual.casillasAfectadas.length);
                     } else {
-                        pintadasMax += (nodoActual.casillasAfectadas.length / nodoActual.profundidad);
+                        pintadasMax += (nodoActual.casillasAfectadas.length);
                     }
                     nodoActual = nodoActual.padre;
                 }
