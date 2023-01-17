@@ -149,3 +149,9 @@ h2{
     height: 50px;
  }
 
+ #fin{
+    position: absolute;
+    transform: translate(-80%, 0%);
+    width: 300px;
+ }
+

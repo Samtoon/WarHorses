@@ -113,7 +113,7 @@ function display() {
      max.puntaje = puntajeMax;
      min.puntaje = puntajeMin;
      presentarPuntajes(puntajeMax+1,puntajeMin+1);
-     graficar(tablero)
+     
     return puntajeMax - puntajeMin;
     
 }
@@ -133,7 +133,7 @@ const date1 = new Date();
 
 function iniciarjuego(dificultad) {
 
-    /*switch(dificultad){
+    switch(dificultad){
         case 1:
             document.getElementById("facil").classList.add("oprimido")
             break;
@@ -143,7 +143,7 @@ function iniciarjuego(dificultad) {
         case 3:
             document.getElementById("dificil").classList.add("oprimido")
             break;
-    }*/
+    }
        
 
     
@@ -157,19 +157,36 @@ function iniciarjuego(dificultad) {
 }
 
 function jugar(){
-    display()
+   
+        display()
         graficar(tablero);
         max.decidirMovimiento();
         graficar(tablero);
         display()
-        min.añadirListeners();  
+        min.añadirListeners(); 
+        console.log("rojo Bloqueado: "+max.bloqueado)
+        console.log("amarillo Bloqueado: "+min.bloqueado)
+        if(max.bloqueado&&min.bloqueado){
+            if(display()>0){
+                console.log("gano rojo");
+                document.getElementById("fin").innerHTML="<h1 class='lines-effect'>Ganador: Caballo rojo</h1>"
+            }else if(display()<0){
+                console.log("gano amarillo");
+                document.getElementById("fin").innerHTML="<h1 class='lines-effect'>Ganador: Caballo amarillo</h1>"
+            }else{
+                document.getElementById("fin").innerHTML="<h1 class='lines-effect'>Fin del juego: Empate</h1>"
+
+            }
+        }
+        
+        
 }
 
 function presentarPuntajes(puntajeRojo,puntajeAmarillo){
-    document.getElementById("pr").innerHTML="<h2 class='lines-effect'>Casillas Rojas:"+puntajeRojo+"</h2>";
-    document.getElementById("pa").innerHTML="<h2 class='lines-effect'>Casillas Amarillas:"+puntajeAmarillo+"</h2>";;
+    document.getElementById("pr").innerHTML="<h2 class='lines-effect'>Casillas Rojas:   "+puntajeRojo+"</h2>";
+    document.getElementById("pa").innerHTML="<h2 class='lines-effect'>Casillas Amarillas:   "+puntajeAmarillo+"</h2>";;
     let libres=64-(puntajeRojo+puntajeAmarillo);
-    document.getElementById("pl").innerHTML="<h2 class='lines-effect'>Casillas Libres:"+libres+"</h2>";;
+    document.getElementById("pl").innerHTML="<h2 class='lines-effect'>Casillas Libres:   "+libres+"</h2>";;
 }
 
 

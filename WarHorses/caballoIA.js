@@ -57,6 +57,7 @@ class CaballoIA extends Caballo {
         if (this.arbolMinimax[0].movimiento.length > 0) {
             //console.log("Mi utilidad es de " + this.arbolMinimax[0].utilidad);
             this.mover(this.arbolMinimax[0].movimiento[0], this.arbolMinimax[0].movimiento[1]);
+            
         } else {
             this.bloqueado = true;
         }

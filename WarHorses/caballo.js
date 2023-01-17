@@ -26,21 +26,24 @@ class Caballo {
         pintarTablero(casillas);
         this.fila = nuevaFila;
         this.columna = nuevaColumna;
+        if(this.bloqueado){
+            
+        }
         if(!this.max) {
             jugar();
+
         }
     }
     decidirMovimiento(filas,columnas,lista) {
-        console.log((lista[0][0]*10)+lista[0][1])
-        document.getElementById("11").classList.remove("seleccion");
+        
 
-        for(let i=0;i<lista;i++){
-            console.log((lista[i][0]*10)+lista[i][1])
-            document.getElementById((lista[i][0]*10)+lista[i][1]).innerHTML='<img src="recursos/bonus.png" height="98px">';
-        }
 
+        
+
+        
    
         if (!this.atrapado()) {
+            
             function contieneMovimiento(filas_, columnas_) {
                 for (let i = 0; i < valores.movimientosPosibles.length; i++) {
                     const movimientoEvaluado = valores.movimientosPosibles[i];
@@ -52,16 +55,21 @@ class Caballo {
                 return false;
             }
 
+            
+
             console.log(`El includes es: ${typeof [filas, columnas]} y movimientosPosibles: ${valores.movimientosPosibles[0]}, la comparación es ${[-2, -1] === valores.movimientosPosibles[0]}`);
             
             if (this.casillaDisponible(this.fila + filas, this.columna + columnas) && contieneMovimiento(filas, columnas)) {
                
                 this.mover(filas, columnas);
-            } /*else {
+                
+            } else {
                 //alert("Movimiento inválido");
-                this.decidirMovimiento();
-            }*/
+                //this.bloqueado=true;
+            }
         }
+
+        
     }
     casillaDisponible(fila, columna, nodo = new Nodo()) {
         if (fila >= 0
@@ -108,18 +116,24 @@ class Caballo {
         movDisponible.push([fila-2,columna+1]);
         movDisponible.push([fila+2,columna-1]);
         movDisponible.push([fila+2,columna+1]);
-
+        let casillasCambiadas=0;
 
         for(let i=0;i<8;i++){
             let filaD=movDisponible[i][0];
             let columnaD=movDisponible[i][1];
             if(this.casillaDisponible(filaD-1,columnaD-1)){
-                let casillasCambiadas=[]
-                casillasCambiadas.push([filaD,columnaD])
+                casillasCambiadas= casillasCambiadas+1;
+                
                 document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).addEventListener("click",()=>this.decidirMovimiento(movDisponible[i][0]-fila, movDisponible[i][1]-columna,casillasCambiadas));
                 document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).classList.add("seleccion");
+                console.log("pinto opciones");
             }
             
+            
+        }
+        console.log("casillas disponibles"+casillasCambiadas)
+        if(casillasCambiadas==0){
+            this.bloqueado=true;
         }
     }
 }
