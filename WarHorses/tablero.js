@@ -1,7 +1,7 @@
 import { Caballo } from "./caballo.js";
 import { CaballoIA } from "./caballoIA.js";
 import valores from "./valoresTablero.json" assert {type: "json"};
-
+import graficar from "./movimiento.js";
 
 class Casilla {
     constructor(fila, columna, valor = 0) {
@@ -113,34 +113,46 @@ function display() {
     return puntajeMax - puntajeMin;
 }
 crearTablero();
+console.log("gola");
+graficar(tablero);
+console.log("gola");
 display();
 let victoriasMax = 0;
 let victoriasMin = 0;
 let empates = 0;
 const date1 = new Date();
 
-for (let i = 1; i <= 1000; i++) {
-    while (!max.bloqueado || !min.bloqueado) {
-    max.decidirMovimiento();
-    display();
-    min.decidirMovimiento();
-    display();
+function jugar(dificultad) {
+    max.dificultad = dificultad;
+    while(!max.bloqueado || !min.bloqueado) {
+        max.decidirMovimiento();
+        graficar(tablero);
+        min.decidirMovimiento();
+        graficar(tablero);
     }
-    const resultado = display();
-    if (resultado > 0) {
-    victoriasMax++;
-    } else if (resultado < 0) {
-    victoriasMin++;
-    } else {
-    empates++;
-    }
-    while (tablero.length > 0) {
-        tablero.pop();
-    }
-    crearTablero();
-    console.log(`Ganadas Max: ${victoriasMax/i}, Ganadas Min: ${victoriasMin/i}, Empates: ${empates/i}, No Partidas: ${i}, mal podados: ${max.malPodados + min.malPodados}`);
-
 }
+// for (let i = 1; i <= 1000; i++) {
+//     while (!max.bloqueado || !min.bloqueado) {
+//     max.decidirMovimiento();
+//     display();
+//     min.decidirMovimiento();
+//     display();
+//     }
+//     const resultado = display();
+//     if (resultado > 0) {
+//     victoriasMax++;
+//     } else if (resultado < 0) {
+//     victoriasMin++;
+//     } else {
+//     empates++;
+//     }
+//     while (tablero.length > 0) {
+//         tablero.pop();
+//     }
+//     crearTablero();
+//     console.log(`Ganadas Max: ${victoriasMax/i}, Ganadas Min: ${victoriasMin/i}, Empates: ${empates/i}, No Partidas: ${i}, mal podados: ${max.malPodados + min.malPodados}`);
+
+// }
 const date2 = new Date();
 const diff = date2 - date1; //milliseconds interval
 console.log("Tardé " + diff + " milisegundos." );
