@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css?family=Dancing Script');
+.box{
+    width: 100px;
+    height: 100px;
+    background-color: #eeeed2;
+    display: inline-block;
+    margin:-2px;
+}
+
+.red{
+    background-color: #c64b29;
+
+}
+
+.yellow{
+    background-color: #e2e21b;
+
+}
+
+.black{
+    background-color: #769656;
+}
+
+.blue{
+    background-color: aqua;
+}
+.caballo{
+    background-image: url("recursos/caballo.png");
+    background-size: 98px 98px;
+}
+.seleccion{
+    background-image: url("recursos/seleccion.png");
+    background-size: 98px 98px;
+}
+
+.centrar{
+    margin:auto;
+    display:block;
+    
+}
+
+#tabla{
+    width: 1200px;
+    height: 900px;
+    background-color: #c29b61;
+    position: relative; 
+}
+
+#tablero{
+
+    position: absolute;
+  top: 8.3%;
+  left: 31%;
+  transform: translate(0%, 0%);
+  border-color: black;
+    border-width: 5px;
+    border-style: solid;
+}
+
+h1{
+   display: inline-block; 
+   position:relative;
+   transform: translate(100%, 0%);
+   font-family: 'Dancing Script', cursive;
+
+}
+
+h1::after,h1::before{
+    content: '';
+    position:absolute;
+    width: 120px;
+    height: 3px;
+    background-color: black ;
+    top: 0.6em;
+    
+}
+
+h1::before{
+    left: -140px;
+}
+
+h1::after{
+    right: -140px;
+}
+
+
+
+
+
+h2{
+    
+    position:relative;
+    font-family: 'Dancing Script', cursive;
+    transform: translate(5%, 200%);
+ 
+ }
+
+ #estadisticas{
+    position: absolute;
+    top: 20%;
+    left: 2%;
+    transform: translate(0%, 0%);
+    border-color: black;
+    border-width: 3px;
+    border-style: dashed;
+    width: 300px;
+    height: 250px;
+ }
+
+ .botonChess{
+    position:relative;
+    transform: translate(27%, 100%);
+    background-color: #804000;
+    width: 170px;
+    height: 50px;
+    margin:20px;
+    border-color: #f6a700;
+    border-width: 3px;
+    border-style: solid;
+    font-family: 'Dancing Script', cursive;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color:#f6a700;
+
+ }
+
+ .oprimido{
+    background-color: #f6a700;
+    color: #804000;
+ }
+
+ #dificultad{
+    position: absolute;
+    top: 60%;
+    left: 2%;
+    transform: translate(0%, 0%);
+    border-color: black;
+    border-width: 3px;
+    border-style: dashed;
+    width: 300px;
+    height: 300px;
+ }
+
+ .presentar{
+    display: inline-block;
+    width: 300px;
+    height: 50px;
+ }
+

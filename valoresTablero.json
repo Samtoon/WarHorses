@@ -1,0 +1,6 @@
+{"vacio" : 0,
+ "max" : {"id" : 1, "pintura" : 3},
+ "min" : {"id" : 2, "pintura": 4},
+ "movimientosPosibles" : [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]],
+ "bonificacion" : 5
+}
