@@ -14,6 +14,7 @@ class Casilla {
     }
 }
 const tablero = [];
+const movDisponible=[];
 const filaMax = 2;
 const columnaMax = 2;
 const filaBono = 3;
@@ -60,7 +61,7 @@ function crearTablero() {
                 max = new CaballoIA(fila, columna, true, 1);
                 break;
             case 1:
-                min = new CaballoIA(fila, columna, false, 2);
+                min = new Caballo(fila, columna, false);
                 break;
             default:
                 tablero[fila][columna] = valores.bonificacion;
@@ -123,14 +124,17 @@ let empates = 0;
 const date1 = new Date();
 
 function jugar(dificultad) {
-    max.dificultad = dificultad;
-    while(!max.bloqueado || !min.bloqueado) {
+    max.dificultad = dificultad; 
         max.decidirMovimiento();
         graficar(tablero);
-        min.decidirMovimiento();
+        min.añadirListeners();
         graficar(tablero);
-    }
+    
 }
+
+
+
+
 // for (let i = 1; i <= 1000; i++) {
 //     while (!max.bloqueado || !min.bloqueado) {
 //     max.decidirMovimiento();
@@ -157,5 +161,6 @@ const date2 = new Date();
 const diff = date2 - date1; //milliseconds interval
 console.log("Tardé " + diff + " milisegundos." );
 
+jugar(1)
 
 export { crearTablero, pintarTablero, leerTablero, nFilas, nColumnas, display, Casilla, tableroLleno, max, min };

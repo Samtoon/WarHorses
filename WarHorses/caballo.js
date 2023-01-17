@@ -26,26 +26,30 @@ class Caballo {
         this.fila = nuevaFila;
         this.columna = nuevaColumna;
     }
-    decidirMovimiento() {
+    decidirMovimiento(filas,columnas) {
+        console.log(this.fila+"-----"+this.columna)
         if (!this.atrapado()) {
-            function contieneMovimiento(filas, columnas) {
+            function contieneMovimiento(filas_, columnas_) {
                 for (let i = 0; i < valores.movimientosPosibles.length; i++) {
                     const movimientoEvaluado = valores.movimientosPosibles[i];
-                    if (filas == movimientoEvaluado[0] && columnas == movimientoEvaluado[1]) {
+                    if (filas_ == movimientoEvaluado[0] && columnas_ == movimientoEvaluado[1]) {
+                        
                         return true;
                     }
                 }
                 return false;
             }
-            const filas = Number(prompt("Cuántas filas desea moverse?"));
-            const columnas = Number(prompt("Cuántas columnas desea moverse?"));
+
             console.log(`El includes es: ${typeof [filas, columnas]} y movimientosPosibles: ${valores.movimientosPosibles[0]}, la comparación es ${[-2, -1] === valores.movimientosPosibles[0]}`);
+            console.log(filas+"-"+columnas)
+            console.log(this.fila+filas+"-"+this.columna+columnas)
             if (this.casillaDisponible(this.fila + filas, this.columna + columnas) && contieneMovimiento(filas, columnas)) {
+                console.log("entre")
                 this.mover(filas, columnas);
-            } else {
-                alert("Movimiento inválido");
+            } /*else {
+                //alert("Movimiento inválido");
                 this.decidirMovimiento();
-            }
+            }*/
         }
     }
     casillaDisponible(fila, columna, nodo = new Nodo()) {
@@ -78,6 +82,34 @@ class Caballo {
         }
         this.bloqueado = true;
         return true;
+    }
+
+    añadirListeners(){
+        console.log("inicio")
+        let fila=this.fila+1;
+        let columna=this.columna+1;
+        let movDisponible=[];
+        movDisponible.push([fila+1,columna-2]);
+        movDisponible.push([fila+1,columna+2]);
+        movDisponible.push([fila-1,columna-2]);
+        movDisponible.push([fila-1,columna+2]);
+        movDisponible.push([fila-2,columna-1]);
+        movDisponible.push([fila-2,columna+1]);
+        movDisponible.push([fila+2,columna-1]);
+        movDisponible.push([fila+2,columna+1]);
+
+        
+        console.log("se creo lista")
+        for(let i=0;i<8;i++){
+            let filaD=movDisponible[i][0];
+            let columnaD=movDisponible[i][1];
+            console.log(filaD+"-"+columnaD);
+            if(this.casillaDisponible(filaD-1,columnaD-1)){
+                document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).addEventListener("click",()=>this.decidirMovimiento(movDisponible[i][0]-fila, movDisponible[i][1]-columna));
+                document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).className="box blue"
+                console.log((movDisponible[i][0]*10)+movDisponible[i][1])
+            }
+        }
     }
 }
 

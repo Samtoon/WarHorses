@@ -21,6 +21,10 @@
     background-color: #769656;
 }
 
+.blue{
+    background-color: aqua;
+}
+
 .centrar{
     margin:auto;
     display:block;
