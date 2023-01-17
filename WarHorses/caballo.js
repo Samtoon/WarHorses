@@ -1,5 +1,5 @@
 import Nodo from "./nodo.js";
-import { crearTablero,pintarTablero, leerTablero, display, Casilla, nFilas, nColumnas} from "./tablero.js";
+import { crearTablero, pintarTablero, leerTablero, display, Casilla, nFilas, nColumnas } from "./tablero.js";
 import valores from "./valoresTablero.json" assert {type: "json"};
 
 class Caballo {
@@ -10,6 +10,8 @@ class Caballo {
         this.valores = max ? valores.max : valores.min;
         const casilla = new Casilla(fila, columna, this.valores.id);
         casilla.pintarCasilla();
+        this.puntaje = 0;
+        this.bloqueado = false;
     }
     mover(filas, columnas) {
         let casillas = [];
@@ -25,23 +27,25 @@ class Caballo {
         this.columna = nuevaColumna;
     }
     decidirMovimiento() {
-        function contieneMovimiento(filas, columnas) {
-            for(let i = 0; i < valores.movimientosPosibles.length; i++) {
-                const movimientoEvaluado = valores.movimientosPosibles[i];
-                if (filas == movimientoEvaluado[0] && columnas == movimientoEvaluado[1]) {
-                    return true;
+        if (!this.atrapado()) {
+            function contieneMovimiento(filas, columnas) {
+                for (let i = 0; i < valores.movimientosPosibles.length; i++) {
+                    const movimientoEvaluado = valores.movimientosPosibles[i];
+                    if (filas == movimientoEvaluado[0] && columnas == movimientoEvaluado[1]) {
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
-        }
-        const filas = Number(prompt("Cuántas filas desea moverse?"));
-        const columnas = Number(prompt("Cuántas columnas desea moverse?"));
-        console.log(`El includes es: ${typeof [filas, columnas]} y movimientosPosibles: ${valores.movimientosPosibles[0]}, la comparación es ${[-2, -1] === valores.movimientosPosibles[0]}`);
-        if (this.casillaDisponible(this.fila + filas, this.columna + columnas) && contieneMovimiento(filas, columnas)) {
-            this.mover(filas,columnas);
-        } else {
-            alert("Movimiento inválido");
-            this.decidirMovimiento();
+            const filas = Number(prompt("Cuántas filas desea moverse?"));
+            const columnas = Number(prompt("Cuántas columnas desea moverse?"));
+            console.log(`El includes es: ${typeof [filas, columnas]} y movimientosPosibles: ${valores.movimientosPosibles[0]}, la comparación es ${[-2, -1] === valores.movimientosPosibles[0]}`);
+            if (this.casillaDisponible(this.fila + filas, this.columna + columnas) && contieneMovimiento(filas, columnas)) {
+                this.mover(filas, columnas);
+            } else {
+                alert("Movimiento inválido");
+                this.decidirMovimiento();
+            }
         }
     }
     casillaDisponible(fila, columna, nodo = new Nodo()) {
@@ -49,7 +53,7 @@ class Caballo {
             && fila < nFilas
             && columna >= 0
             && columna < nColumnas) {
-                return leerTablero(fila, columna) == valores.vacio 
+            return leerTablero(fila, columna) == valores.vacio
                 || leerTablero(fila, columna) == valores.bonificacion ? true : false;
         }
         return false;
@@ -65,6 +69,15 @@ class Caballo {
             }
         }
         return casillas;
+    }
+    atrapado() {
+        for (let i = 0; i < valores.movimientosPosibles.length; i++) {
+            if (this.casillaDisponible(this.fila + valores.movimientosPosibles[i][0], this.columna + valores.movimientosPosibles[i][1])) {
+                return false;
+            }
+        }
+        this.bloqueado = true;
+        return true;
     }
 }
 

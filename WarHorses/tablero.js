@@ -57,13 +57,13 @@ function crearTablero() {
         //console.log(`Fila elegida ${fila}, Columna elegida ${columna}`);
         switch (i) {
             case 0:
-                max = new CaballoIA(fila, columna, true, 3);
+                max = new CaballoIA(fila, columna, true, 1);
                 break;
             case 1:
-                min = new CaballoIA(fila, columna, false, 3);
+                min = new CaballoIA(fila, columna, false, 2);
                 break;
             default:
-                //tablero[fila][columna] = valores.bonificacion;
+                tablero[fila][columna] = valores.bonificacion;
                 
                 //console.log("Bonificación en [" + columna + "," + fila + "]");
         }
@@ -93,7 +93,7 @@ const leerTablero = (fila, columna) => tablero[fila][columna];
 function display() {
     let puntajeMin = 0;
     let puntajeMax = 0;
-    //console.log("\n");
+    console.log("\n");
     for (let j = 0; j < tablero.length; j++) {
         let fila = "";
         for (let i = 0; i < tablero[0].length; i++) {
@@ -104,10 +104,12 @@ function display() {
                 puntajeMin += 1;
             }
         }
-        // console.log(j + " " + fila);
+         console.log(j + " | " + fila);
     }
-    // console.log("Puntaje Min: " + puntajeMin);
-    // console.log("Puntaje Max:" + puntajeMax);
+     console.log("Puntaje Min: " + puntajeMin);
+     console.log("Puntaje Max:" + puntajeMax);
+     max.puntaje = puntajeMax;
+     min.puntaje = puntajeMin;
     return puntajeMax - puntajeMin;
 }
 crearTablero();
@@ -115,12 +117,14 @@ display();
 let victoriasMax = 0;
 let victoriasMin = 0;
 let empates = 0;
+const date1 = new Date();
+
 for (let i = 1; i <= 1000; i++) {
     while (!max.bloqueado || !min.bloqueado) {
     max.decidirMovimiento();
-    //display();
+    display();
     min.decidirMovimiento();
-    //display();
+    display();
     }
     const resultado = display();
     if (resultado > 0) {
@@ -134,9 +138,12 @@ for (let i = 1; i <= 1000; i++) {
         tablero.pop();
     }
     crearTablero();
-    console.log(`Ganadas Max: ${victoriasMax/i}, Ganadas Min: ${victoriasMin/i}, Empates: ${empates/i}, No Partidas: ${i}`);
+    console.log(`Ganadas Max: ${victoriasMax/i}, Ganadas Min: ${victoriasMin/i}, Empates: ${empates/i}, No Partidas: ${i}, mal podados: ${max.malPodados + min.malPodados}`);
 
 }
+const date2 = new Date();
+const diff = date2 - date1; //milliseconds interval
+console.log("Tardé " + diff + " milisegundos." );
 
 
 export { crearTablero, pintarTablero, leerTablero, nFilas, nColumnas, display, Casilla, tableroLleno, max, min };
