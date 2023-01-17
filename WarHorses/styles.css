@@ -124,7 +124,11 @@ h2{
     justify-content: center;
     color:#f6a700;
 
+ }
 
+ .oprimido{
+    background-color: #f6a700;
+    color: #804000;
  }
 
  #dificultad{

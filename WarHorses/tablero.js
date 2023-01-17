@@ -131,19 +131,38 @@ let victoriasMin = 0;
 let empates = 0;
 const date1 = new Date();
 
-function jugar(dificultad=3) {
-    if (!max.bloqueado || !min.bloqueado){
+function iniciarjuego(dificultad) {
+
+    /*switch(dificultad){
+        case 1:
+            document.getElementById("facil").classList.add("oprimido")
+            break;
+        case 2:
+            document.getElementById("medio").classList.add("oprimido")
+            break;
+        case 3:
+            document.getElementById("dificil").classList.add("oprimido")
+            break;
+    }*/
+       
+
+    
     max.dificultad = dificultad; 
         display()
         graficar(tablero);
         max.decidirMovimiento();
         graficar(tablero);
         display()
-        min.añadirListeners();
-    }else{
-        console.log("alguno se bloqueo")
-    }
-    
+        min.añadirListeners();   
+}
+
+function jugar(){
+    display()
+        graficar(tablero);
+        max.decidirMovimiento();
+        graficar(tablero);
+        display()
+        min.añadirListeners();  
 }
 
 function presentarPuntajes(puntajeRojo,puntajeAmarillo){
@@ -182,6 +201,8 @@ const date2 = new Date();
 const diff = date2 - date1; //milliseconds interval
 console.log("Tardé " + diff + " milisegundos." );
 
-jugar(1)
+document.getElementById("facil").addEventListener("click",()=>iniciarjuego(1));
+document.getElementById("medio").addEventListener("click",()=>iniciarjuego(2));
+document.getElementById("dificil").addEventListener("click",()=>iniciarjuego(3));
 
-export { crearTablero, pintarTablero, leerTablero, nFilas, nColumnas, display, Casilla, tableroLleno, max, min, jugar };
+export { crearTablero, pintarTablero, leerTablero, nFilas, nColumnas, display, Casilla, tableroLleno, max, min, iniciarjuego,jugar };

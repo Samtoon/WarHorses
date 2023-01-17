@@ -22,7 +22,7 @@ function graficar(tablero){
                     document.getElementById(idCasilla).className = "box red"
                     break;
                 case valores.max.pintura:
-
+                    document.getElementById(idCasilla).innerHTML='';
                     document.getElementById(idCasilla).className = "box red"
                     break;
                 case valores.min.id:
@@ -31,7 +31,7 @@ function graficar(tablero){
                     document.getElementById(idCasilla).className = "box yellow"
                     break;
                 case valores.min.pintura:
-                    
+                    document.getElementById(idCasilla).innerHTML='';
                     document.getElementById(idCasilla).className = "box yellow"
                     break;
                 case valores.bonificacion:
@@ -41,7 +41,14 @@ function graficar(tablero){
                 
                 case valores.vacio:
                     
-                    document.getElementById(idCasilla).className = "box black"
+                let casillasnegras=["12","14","16","18","21","23","25","27","32","34","36","38","41","43","45","47","52","54","56","58","61","63","65","67","72","74","76","78","81","83","85","87"]
+                    if(casillasnegras.includes(idCasilla+"")){
+                        document.getElementById(idCasilla).className = "box black"
+                    }else{
+                        document.getElementById(idCasilla).className = "box"
+
+                    }
+                    
                     break;
 
 

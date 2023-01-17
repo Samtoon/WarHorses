@@ -119,7 +119,7 @@ class Caballo {
                 document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).addEventListener("click",()=>this.decidirMovimiento(movDisponible[i][0]-fila, movDisponible[i][1]-columna,casillasCambiadas));
                 document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).classList.add("seleccion");
             }
-            document.getElementById("11").classList.add("seleccion");
+            
         }
     }
 }
