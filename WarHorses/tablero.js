@@ -76,6 +76,7 @@ function pintarTablero(casillas) {
     for (let i = 0; i < nCasillas; i++) {
         casillas[i].pintarCasilla();
     }
+   
 }
 
 function tableroLleno() {
@@ -111,24 +112,45 @@ function display() {
      console.log("Puntaje Max:" + puntajeMax);
      max.puntaje = puntajeMax;
      min.puntaje = puntajeMin;
+     presentarPuntajes(puntajeMax+1,puntajeMin+1);
+     graficar(tablero)
     return puntajeMax - puntajeMin;
+    
 }
+
+
 crearTablero();
 console.log("gola");
 graficar(tablero);
 console.log("gola");
 display();
+
+
 let victoriasMax = 0;
 let victoriasMin = 0;
 let empates = 0;
 const date1 = new Date();
 
 function jugar(dificultad=3) {
+    if (!max.bloqueado || !min.bloqueado){
     max.dificultad = dificultad; 
+        display()
         graficar(tablero);
         max.decidirMovimiento();
         graficar(tablero);
+        display()
         min.añadirListeners();
+    }else{
+        console.log("alguno se bloqueo")
+    }
+    
+}
+
+function presentarPuntajes(puntajeRojo,puntajeAmarillo){
+    document.getElementById("pr").innerHTML="<h2 class='lines-effect'>Casillas Rojas:"+puntajeRojo+"</h2>";
+    document.getElementById("pa").innerHTML="<h2 class='lines-effect'>Casillas Amarillas:"+puntajeAmarillo+"</h2>";;
+    let libres=64-(puntajeRojo+puntajeAmarillo);
+    document.getElementById("pl").innerHTML="<h2 class='lines-effect'>Casillas Libres:"+libres+"</h2>";;
 }
 
 

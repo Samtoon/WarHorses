@@ -1,3 +1,4 @@
+import graficar from "./movimiento.js";
 import Nodo from "./nodo.js";
 import { crearTablero, pintarTablero, leerTablero, display, Casilla, nFilas, nColumnas, jugar } from "./tablero.js";
 import valores from "./valoresTablero.json" assert {type: "json"};
@@ -29,8 +30,16 @@ class Caballo {
             jugar();
         }
     }
-    decidirMovimiento(filas,columnas) {
-        console.log(this.fila+"-----"+this.columna)
+    decidirMovimiento(filas,columnas,lista) {
+        console.log((lista[0][0]*10)+lista[0][1])
+        document.getElementById("11").classList.remove("seleccion");
+
+        for(let i=0;i<lista;i++){
+            console.log((lista[i][0]*10)+lista[i][1])
+            document.getElementById((lista[i][0]*10)+lista[i][1]).innerHTML='<img src="recursos/bonus.png" height="98px">';
+        }
+
+   
         if (!this.atrapado()) {
             function contieneMovimiento(filas_, columnas_) {
                 for (let i = 0; i < valores.movimientosPosibles.length; i++) {
@@ -44,10 +53,9 @@ class Caballo {
             }
 
             console.log(`El includes es: ${typeof [filas, columnas]} y movimientosPosibles: ${valores.movimientosPosibles[0]}, la comparación es ${[-2, -1] === valores.movimientosPosibles[0]}`);
-            console.log(filas+"-"+columnas)
-            console.log(this.fila+filas+"-"+this.columna+columnas)
+            
             if (this.casillaDisponible(this.fila + filas, this.columna + columnas) && contieneMovimiento(filas, columnas)) {
-                console.log("entre")
+               
                 this.mover(filas, columnas);
             } /*else {
                 //alert("Movimiento inválido");
@@ -101,17 +109,17 @@ class Caballo {
         movDisponible.push([fila+2,columna-1]);
         movDisponible.push([fila+2,columna+1]);
 
-        
-        console.log("se creo lista")
+
         for(let i=0;i<8;i++){
             let filaD=movDisponible[i][0];
             let columnaD=movDisponible[i][1];
-            console.log(filaD+"-"+columnaD);
             if(this.casillaDisponible(filaD-1,columnaD-1)){
-                document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).addEventListener("click",()=>this.decidirMovimiento(movDisponible[i][0]-fila, movDisponible[i][1]-columna));
-                document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).className="box blue"
-                console.log((movDisponible[i][0]*10)+movDisponible[i][1])
+                let casillasCambiadas=[]
+                casillasCambiadas.push([filaD,columnaD])
+                document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).addEventListener("click",()=>this.decidirMovimiento(movDisponible[i][0]-fila, movDisponible[i][1]-columna,casillasCambiadas));
+                document.getElementById((movDisponible[i][0]*10)+movDisponible[i][1]).classList.add("seleccion");
             }
+            document.getElementById("11").classList.add("seleccion");
         }
     }
 }

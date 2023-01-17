@@ -24,6 +24,14 @@
 .blue{
     background-color: aqua;
 }
+.caballo{
+    background-image: url("recursos/caballo.png");
+    background-size: 98px 98px;
+}
+.seleccion{
+    background-image: url("recursos/seleccion.png");
+    background-size: 98px 98px;
+}
 
 .centrar{
     margin:auto;
@@ -129,5 +137,11 @@ h2{
     border-style: dashed;
     width: 300px;
     height: 300px;
+ }
+
+ .presentar{
+    display: inline-block;
+    width: 300px;
+    height: 50px;
  }
 

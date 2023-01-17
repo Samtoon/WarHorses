@@ -38,6 +38,13 @@ function graficar(tablero){
                 
                     document.getElementById(idCasilla).innerHTML='<img src="recursos/bonus.png" height="98px">';
                     break;
+                
+                case valores.vacio:
+                    
+                    document.getElementById(idCasilla).className = "box black"
+                    break;
+
+
 
 
             }
