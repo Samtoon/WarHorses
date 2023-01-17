@@ -1,5 +1,5 @@
 import Nodo from "./nodo.js";
-import { crearTablero, pintarTablero, leerTablero, display, Casilla, nFilas, nColumnas } from "./tablero.js";
+import { crearTablero, pintarTablero, leerTablero, display, Casilla, nFilas, nColumnas, jugar } from "./tablero.js";
 import valores from "./valoresTablero.json" assert {type: "json"};
 
 class Caballo {
@@ -25,6 +25,9 @@ class Caballo {
         pintarTablero(casillas);
         this.fila = nuevaFila;
         this.columna = nuevaColumna;
+        if(!this.max) {
+            jugar();
+        }
     }
     decidirMovimiento(filas,columnas) {
         console.log(this.fila+"-----"+this.columna)

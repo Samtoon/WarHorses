@@ -123,13 +123,12 @@ let victoriasMin = 0;
 let empates = 0;
 const date1 = new Date();
 
-function jugar(dificultad) {
+function jugar(dificultad=3) {
     max.dificultad = dificultad; 
+        graficar(tablero);
         max.decidirMovimiento();
         graficar(tablero);
         min.añadirListeners();
-        graficar(tablero);
-    
 }
 
 
@@ -163,4 +162,4 @@ console.log("Tardé " + diff + " milisegundos." );
 
 jugar(1)
 
-export { crearTablero, pintarTablero, leerTablero, nFilas, nColumnas, display, Casilla, tableroLleno, max, min };
+export { crearTablero, pintarTablero, leerTablero, nFilas, nColumnas, display, Casilla, tableroLleno, max, min, jugar };
